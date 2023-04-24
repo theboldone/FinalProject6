@@ -65,7 +65,7 @@ server <- function(input, output) {
     "Topic and Analysis: As someone who is interviewing for job opportunities across all disciplines, I am asked to either provide my years of experience or undergraduate graduation date so employers can calculate my age. I am not asked both age and years of experience. With such large importance given to years of work experience or age in deciding the salary range for a role, I wanted to explore the relationship between age and salary as well as the relationship between years of experience and salary. I want to know what salary I will be offered in the industry so I am not undervalued and can ask for a salary that is appropriate. Thus through linear regression, I was able to create a model to help predict Salary when given Age or YearsExperience. My analysis used tools and methods such as the  lm to save my linear model, R^2 to estimate how well the model fit the data, and RMSEP as the average difference between the observed value and predicted value for y.
 "  })
   output$text1.2 <- renderText({
-    "Data and Github: The dataset I found is: https://www.kaggle.com/datasets/codebreaker619/salary-data-with-age-and-experience?select=Salary_Data.csv that covers salary, age, and years of experience. The Github Link to my code is here: 
+    "Data and Github: The dataset I found is: https://www.kaggle.com/datasets/codebreaker619/salary-data-with-age-and-experience?select=Salary_Data.csv that covers salary, age, and years of experience. The Github Link to my code is here: https://github.com/theboldone/FinalProject6
 "
   })
   output$text1.3 <- renderText({
@@ -77,7 +77,7 @@ server <- function(input, output) {
 "
   })
   output$text2.2 <- renderText({
-    "The Algorithm Explained: Through linear regression with one input variable for x and one output variable for y, we want to see the trend between these two variables (for example: both increase positively or in opposite directions when one value for a variable grows larger). We also want to create a model that can help us predict the relationship between x and y and understand the strength at which x can be used to predict y when using the model and the general variance or deviation of values from predicted vs what they are listed as in reality. By collecting x and y pairs of data showing what x value is there for the y value and generating a robust dataset, I strongly support plotting the scatterplot of values to see if there is a linear relationship (where a line can pass through most of the points or a similar number of points are on or above and below the line). I also look at the correlation value and see if it is close to 1 to see an early indicator of strong relationship between the x and y values. In order to train our model for prediction, we need to divide it into training dataset and testing dataset. With 80% of our dataset for training, we can look to establish a model through y=ax+b+e where y’s the dependent variable, a’s the slope, b’s the intercept, x’s the independent variable, and e is the error or residual (which is the absolute value of the difference of the predicted vs listed/observed value in reality). 
+    "The Algorithm Explained: Through linear regression with one input variable for x and one output variable for y, we want to see the trend between these two variables (for example: both increase positively or in opposite directions when one value for a variable grows larger). We also want to create a model that can help us predict the relationship between x and y and understand the strength at which x can be used to predict y when using the model and the general variance or deviation of values from predicted vs what they are listed and observed as in reality. By collecting x and y pairs of data showing what x value is there for the y value and generating a robust dataset, I strongly support plotting the scatterplot of values to see if there is a linear relationship (where a line can pass through most of the points or a similar number of points are on or above and below the line). I also look at the correlation value and see if it is close to 1 to see an early indicator of strong relationship between the x and y values. In order to train our model for prediction, we need to divide it into training dataset and testing dataset. With 80% of our dataset for training, we can look to establish a model through y=ax+b+e where y’s the dependent variable, a’s the slope, b’s the intercept, x’s the independent variable, and e is the error or residual (which is the absolute value of the difference of the predicted vs listed/observed value in reality). 
 "
   })
   output$text2.3 <- renderText({
@@ -114,13 +114,12 @@ server <- function(input, output) {
     testingDataDF <- read.csv("Testing_Data.csv")
     
     ggplot(data = trainingDataDF, aes_string(x = input$x, y = input$y, color = input$z)) +ggtitle("Figure 2: Training Data") + geom_point()+geom_smooth(method = "lm",formula = y ~ x) 
-  })
+  }) 
   output$cIPlot <- renderPlot({
     confidenceIntervalD=read.csv("ConfidenceIntervalSection.csv")
-    colnames(confidenceIntervalD)=c("Predicted", "Listed", "LowerBound", "UpperBound")
-    confidenceIntervalD
-    
-    ggplot(data=confidenceIntervalD, aes(x=Predicted, y=Listed))+geom_point(color="blue")+ggtitle("Figure 4: Confidence Interval for Selected Y Value [2 LowerBound, 3 UpperBound]")+geom_errorbar(aes(ymin=LowerBound, ymax=UpperBound)) 
+    colnames(confidenceIntervalD)=c("Predicted", "Observed", "LowerBound", "UpperBound")
+     
+    ggplot(data=confidenceIntervalD, aes(x=Predicted, y=Observed))+geom_point(color="blue")+ggtitle("Figure 4: Confidence Interval for Selected Y Value [2 LowerBound, 3 UpperBound]")+geom_errorbar(aes(ymin=LowerBound, ymax=UpperBound)) 
   })
   output$predictionPlot <- renderPlot({
     trainingDataDF <- read.csv("Training_Data.csv")
@@ -158,19 +157,19 @@ server <- function(input, output) {
     names(predictionDF)[1] = 'Predicted'
     write.csv(predictionDF, "TheXValues.csv", row.names=FALSE)
     if(input$y=='Age' ){
-      listedValues = testingDataDF[,c('Age')]
-      names(listedValues)[2] = 'Value_Listed'
-      write.csv(listedValues, "TheYValues.csv", row.names=FALSE)
+      observedValues = testingDataDF[,c('Age')]
+      names(observedValues)[2] = 'Value_Observed'
+      write.csv(observedValues, "TheYValues.csv", row.names=FALSE)
     }
     if(input$y=='YearsExperience' ){
-      listedValues = testingDataDF[,c('YearsExperience')]
-      names(listedValues)[2] = 'Value_Listed'
-      write.csv(listedValues, "TheYValues.csv", row.names=FALSE)
+      observedValues = testingDataDF[,c('YearsExperience')]
+      names(observedValues)[2] = 'Value_Observed'
+      write.csv(observedValues, "TheYValues.csv", row.names=FALSE)
     }
     if(input$y=='Salary' ){
-      listedValues = testingDataDF[,c('Salary')]
-      names(listedValues)[2] = 'Value_Listed'
-      write.csv(listedValues, "TheYValues.csv", row.names=FALSE)
+      observedValues = testingDataDF[,c('Salary')]
+      names(observedValues)[2] = 'Value_Observed'
+      write.csv(observedValues, "TheYValues.csv", row.names=FALSE)
     }
     
     xval <- read.csv("TheXValues.csv")
@@ -189,7 +188,7 @@ server <- function(input, output) {
     predictionDfPlotted$lower = predict(learningModelLinear, newdata=testingDataDF, interval = "confidence")[,2]
     predictionDfPlotted$upper = predict(learningModelLinear, newdata=testingDataDF, interval = "confidence")[,3]
     write.csv(predictionDfPlotted, "ConfidenceIntervalSection.csv", row.names=FALSE)
-    ggplot(data = predictionDfPlotted, aes_string(predictionDfPlotted$Predicted, y = predictionDfPlotted$x,color = input$z)) +ggtitle("Figure 3: Prediction of Selected Y Value With Test Set") +geom_point()+geom_smooth(method = "lm",formula = y ~ x) + xlab("Predicted Value") + ylab("Listed Value") 
+    ggplot(data = predictionDfPlotted, aes_string(predictionDfPlotted$Predicted, y = predictionDfPlotted$x,color = input$z)) +ggtitle("Figure 3: Prediction of Selected Y Value With Test Set") +geom_point()+geom_smooth(method = "lm",formula = y ~ x) + xlab("Predicted Value") + ylab("Listed/Observed Value") 
   })
   
   sliderValues <- reactive({
